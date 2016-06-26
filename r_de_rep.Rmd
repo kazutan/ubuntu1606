@@ -1,0 +1,259 @@
+---
+title: "Ubuntuで<br/>Rによる分析レポート作成"
+author: "前田 和寛(@kazutan)"
+date: "`r format(Sys.time(),'%Y/%m/%d')`"
+output:
+  revealjs::revealjs_presentation:
+    pandoc_args: [
+      '--from', 'markdown+autolink_bare_uris+tex_math_single_backslash-implicit_figures'
+    ]
+    center: true
+    theme: sky
+css: "for-revealjs.css"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+# はじめに
+
+## 自己紹介
+
+<div class="column1">
+- 比治山大学短期大学部
+- @kazutan  
+(Twitter, GitHub, Qiita)
+- http://kz-md.net/
+- http://blog.kz-md.net/
+- Rおじさん
+</div>
+<div class="column2">
+![icon](pics/user.png)
+</div>
+
+## 今日のお話
+
+- Rとは
+- UbuntuでRをつかう
+- Rで分析レポート
+- R Markdownでこんなことできます
+
+今日は事例紹介を中心にお話します。実際の作成物やコードなどは後で公開します(#ubuntujpつけてTwitterに流します)
+
+# Rとは
+
+## 統計解析環境
+
+- 分析屋が分析のために開発
+    - 最新版は3.3.1
+    - オープンソース
+- クロスプラットフォーム
+    - Windows, Mac, Linux主要ディストリビューション
+    - とはいえ使うとなると多少は違いが出てくる
+- 多くのパッケージが公開
+    - 開発が活発
+    - CRANに登録されているだけで8000以上
+    - GitHubにもたくさん
+
+## できること
+
+- データ取得・整形
+    - データベース接続、スクレイピングなど
+    - データハンドリング、前処理
+- 分析
+    - 統計的検定、ベイズ推定など
+    - 機械学習、DeepLearningなど
+    - テキストマイニングなど
+    - 空間地理統計など
+- 可視化
+- ドキュメント生成
+- アプリケーション開発
+- その他いろいろ
+
+## 特徴
+
+- 一連の作業がRで完結
+    - 前のスライドの通り
+- コミュニティが非常に活発
+    - 日本各地にコミュニティが存在
+    - 勉強会などがたくさん開催
+- 書籍や資料が豊富
+    - もう追い切れないほどに書籍が
+    - 国内だけでも毎週大量の記事がUp
+- 実装が早い
+    - 「こんなのないかな?」と思うものは(探せば)たいがいどっかにある
+    - 最近では「ほげほげ r」でググればすんなりHitする
+- 自分で開発もできる
+    - 「ないなら作ればいい」
+
+# UbuntuでRを使う
+
+## Rのインストール
+
+RはCRAN(The Comprehensive R Archive Network)のミラーからもってきます。基本的な手順は以下のページを参照してください:
+
+https://cloud.r-project.org/bin/linux/ubuntu/README.html
+
+
+## RStudio
+
+- RのためのIDE
+    - オープンソース、クロスプラットフォーム
+    - デスクトップ版とサーバー版と有償サーバー版
+- 便利機能満載
+    - プロジェクト単位による管理
+    - 使いやすいUI
+    - 各種コード補完、カラーリング
+    - Git連携、Build　etc...
+- ほとんどのRユーザーはこれを使ってる
+
+## UbuntuでRStudioを使うには
+
+- Ubuntuでもデスクトップ版が存在
+    - ただし、**そのままでは日本語が入力できない**
+        - 14.04ならいくやさんのおかげで使えるようになりました
+- RStudioServerをおすすめします
+    - ローカルにVM立ち上げて、そこで使用
+    - 個人的にはVirtualBox & vagrantで構築
+        - [Vagrantでローカルの仮想マシンにRStudioServer環境を作る - Qiita](http://qiita.com/kazutan/items/6048fa8d46683dcad788)
+    - Docker Boxも提供されてます
+
+# Rでレポート作成
+
+## Rでレポート作成するには
+
+- R Markdownを利用します
+    - Markdownに**Rのコードを評価するブロック(Rチャンク)を組み込めるようにした**ようなもの
+    - 拡張子は**.Rmd**
+    - Markdownの基礎があれば、Rチャンクを少し勉強すれば利用可能
+    - RStudioを使うと抜群に楽になる
+    - (デモ)
+
+## R Markdownの仕組み
+
+- R Markdownは以下の流れでドキュメントを生成します
+    - まずはknitrパッケージでRチャンク部分などを処理
+    - 生成されたmdファイルをpandocというドキュメント変換アプリで変換
+    - このパッケージにPandocが内包されているので、何も考えなくても使える
+
+```{r workflow-render, eval=TRUE, echo=FALSE}
+library(DiagrammeR)
+ndf <- create_nodes(node=letters[1:3], label=c(".Rmd", ".md", "ドキュメント"))
+edf <- create_edges(from=c("a", "b"), to=c("b", "c"), label=c("knitr", "pandoc"))
+graph <- create_graph(
+  nodes_df = ndf,
+  edges_df = edf,
+  graph_attrs = "rankdir = LR"
+)
+render_graph(graph)
+
+```
+
+
+## 対応する出力形式
+
+- いろんなものに対応しています(一部抜粋)
+    - htmlファイル
+        - 基本かつ**最強**。最もRmdを活かせるタイプ。
+    - pdfファイル
+        - tex環境が必要。いくつか地雷があるけど整えれば楽しい。
+    - docxファイル
+        - Officeをインストールしてなくても生成可能。
+    - odtファイル
+        - LibreOfficeなどで利用可能。
+    - mdファイル
+        - Githubやブログ記事向け。
+    - rtfファイル
+        - リッチテキスト形式。
+
+
+# Rチャンク
+
+## Rチャンクとは
+
+- Rのコードを記述したブロック
+    - 基本的な書き方は以下の通り
+````
+`r ''````{r}
+head(iris)
+`r ''````
+````
+    - ちなみに実行結果は以下の通り:
+
+```{r r-chank-sample, eval=TRUE, echo=FALSE}
+head(iris)
+```
+
+## Rチャンクの基本
+
+- 冒頭にYAMLヘッダ
+    - ドキュメント設定などはここに記載
+- Rチャンクはいくつでも設置可
+    - チャンクに名前をつけることも可能
+    - 結構詳細にオプションを設定可能
+    - Rオブジェクトを引き継ぐことも可能
+- 通常と(ほぼ)同じようにRが使える
+    - パッケージ読み込み
+    - データファイルへのアクセス
+    - ただしパスについてはちょっと気をつける点も
+
+## R Markdownを習得するには
+
+今回は時間の都合上省略します。以下参考資料です。
+
+- [Rでドキュメントを生成しよう](http://kazutan.github.io/KandaiR1/)
+    - 6/18にKandai.Rで発表してきた資料です
+- [ドキュメント・プレゼンテーション生成](http://www.kyoritsu-pub.co.jp/bookdetail/9784320123724)
+    - R Markdownについて記した書籍。
+- [R Markdownで楽々レポートづくり：連載｜gihyo.jp … 技術評論社](http://gihyo.jp/admin/serial/01/r-markdown)
+    - 上記書籍の著者による連載です。
+    - 非常にわかりやすくR Markdownの入門に最適!
+- http://rmarkdown.rstudio.com/index.html
+    - 本家のドキュメント(英語)です。
+    - 入門や基礎、そして応用や開発までたっぷり詰まってます
+
+# R Markdownで何ができる?
+
+## いろんなフォーマットに出力
+
+- Pandocを利用して、様々な出力に対応
+- テンプレートを整備して、パッケージで提供しているものも
+    - Tufteスタイル
+    - APAスタイル
+    - reveal.jsスライド(このスライド)
+- もちろん**自作できます**
+    - 本家ドキュメントに作り方が記載
+    - でもちょっとめんどい
+
+## 動的コンテンツ作成
+
+- html形式であれば、JavaScriptも使える
+    - jsライブラリを読み込める!
+        - leaflet
+        - datatable
+        - Plotly など
+- サンプル
+    - [RPubs - 台風22号と23号](https://rpubs.com/kazutan/typhoon5)
+    - [RPubs - 某学会56回大会向け情報](https://rpubs.com/kazutan/jssp2015_leaflet)
+
+## Webサイト構築
+
+- RStudioのBuilt機能を使って、一気にサイト構築も
+    - RmdにはBootstrapが標準で組み込まれている
+    - Bootstrapをベースにしたサイトが作れる
+- (デモ)
+
+## ダッシュボード作成
+
+- ダッシュボードも簡単に作れます
+    - {flexdashboard}パッケージを利用
+- Rのスクリプトをうまく使えば…
+    - Rmdで雛形作成
+    - データセットの1レコードずつをダッシュボードに流し込む
+    - それを一気にサイトとして構築
+- (デモ)
+
+## Enjoy!
+
