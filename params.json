@@ -1,6 +1,6 @@
 {
   "name": "Ubuntu1606",
   "tagline": "Ubuntu16.04LTS リリースパーティーでの発表用資料置き場。",
-  "body": "# UbuntuでRによる分析レポート作成\r\n\r\nスライドは以下のリンク先にあります(htmlスライド)\r\n\r\nhttp://kazutan.github.io/ubuntu16.06/r_derep.html\r\n\r\nRmdをまとめてレンダリングしてサイト構築する、という内容については、以下のリポジトリにおいてます:\r\n\r\nhttps://github.com/kazutan/rmd_site_test\r\n\r\nダッシュボードを一気に作成する、という内容については、以下のリポジトリにおいてます:\r\n\r\nhttps://github.com/kazutan/param_dashboard\r\n\r\n\r\n何かありましたら、@kazutan までご連絡ください。\r\n",
+  "body": "# UbuntuでRによる分析レポート作成\r\n\r\nスライドは以下のリンク先にあります(htmlスライド)\r\n\r\nhttp://kazutan.github.io/ubuntu1606/r_de_rep.html\r\n\r\nRmdをまとめてレンダリングしてサイト構築する、という内容については、以下のリポジトリにおいてます:\r\n\r\nhttps://github.com/kazutan/rmd_site_test\r\n\r\nダッシュボードを一気に作成する、という内容については、以下のリポジトリにおいてます:\r\n\r\nhttps://github.com/kazutan/param_dashboard\r\n\r\n\r\n何かありましたら、@kazutan までご連絡ください。\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
