@@ -2,7 +2,7 @@
 
 スライドは以下のリンク先にあります(htmlスライド)
 
-http://kazutan.github.io/ubuntu16.06/r_derep.html
+http://kazutan.github.io/ubuntu16.06/r_de_rep.html
 
 Rmdをまとめてレンダリングしてサイト構築する、という内容については、以下のリポジトリにおいてます:
 
